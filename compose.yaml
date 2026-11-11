@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      BRIDGE_ACCOUNTS_FILE: /run/secrets/bridge_accounts
+    secrets:
+      - bridge_accounts
+    volumes:
+      - database:/data
+  proxy:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      BRIDGE_DOMAIN: ${BRIDGE_DOMAIN:?Set BRIDGE_DOMAIN in .env}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - certificates:/data
+      - proxy_config:/config
+secrets:
+  bridge_accounts:
+    file: ./accounts.json
+volumes:
+  database:
+  certificates:
+  proxy_config:

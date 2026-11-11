@@ -1,0 +1,6 @@
+{$BRIDGE_DOMAIN} {
+    request_body {
+        max_size 1600000
+    }
+    reverse_proxy app:8765
+}
